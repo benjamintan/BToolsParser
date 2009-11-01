@@ -214,7 +214,7 @@ public class BTParserST {
             db.insertDB(i.getItemCode(), i.getName(), i.getDesc(), i.getImgUrl(),
                     i.getCategories(), i.getSkuEan(), i.getPrice());
 
-            System.out.println("Item Added: " + i.toString());
+           
 
 
         } catch (Exception e){
