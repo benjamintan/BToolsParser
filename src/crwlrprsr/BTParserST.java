@@ -30,6 +30,7 @@ public class BTParserST {
     Parser parser;
     ArrayList itemList = new ArrayList<Item>();
 
+
     public BTParserST(){
 
         db = new ToolsDB();
@@ -38,6 +39,8 @@ public class BTParserST {
 
     
     protected String downloadPage(String u) {
+
+
 
         InputStream is = null;
         DataInputStream dis = null;
@@ -116,8 +119,6 @@ public class BTParserST {
             for (NodeIterator e = parser.elements (); e.hasMoreNodes ();){
                 e.nextNode().collectInto(list2, filter_sh_pn_uc_title);
             }
-
-            //System.out.println(list2.asString().trim());
             
             // Perform some post processing to retreive necessary information
             String s = list2.asString().trim();
@@ -128,9 +129,6 @@ public class BTParserST {
             s = s.substring(0, s.indexOf("Quantity"));
 
             String[] arr = s.split("\\|");
-
-
-
             title = arr[0].trim();
 
             for(int i = 1; i < arr.length; i++) {
@@ -143,8 +141,6 @@ public class BTParserST {
                     price = arr[i+1].trim();
             }
 
-            //System.out.println(title + " " + itemCode + " " + skuEan + " " + price);
-
 
             // This set of filters is to determine the type of tool based
             // on the websites navigation bar. Eg: Brown Tools > Cutting Tools > ...)
@@ -154,12 +150,9 @@ public class BTParserST {
 
             HasAttributeFilter filter_catcb = new HasAttributeFilter("class", "CATCommandButton");
 
-
             for (NodeIterator e = parser.elements (); e.hasMoreNodes ();){
                 e.nextNode().collectInto(list3, filter_catcb);
             }
-
-
 
             Node[] noA = list3.toNodeArray();
             
@@ -205,29 +198,18 @@ public class BTParserST {
 
             imgUrl = "http://www.browntool.com" + imgUrl.substring(srcIdx, altIdx);
 
-            //System.out.println(imgUrl);
-
-
             // Now add all the gathered information into itemList
             Item i = new Item(title, itemCode, skuEan, price, imgUrl, description, categories);
             itemList.add(i);
             db.insertDB(i.getItemCode(), i.getName(), i.getDesc(), i.getImgUrl(),
                     i.getCategories(), i.getSkuEan(), i.getPrice());
 
-           
-
 
         } catch (Exception e){
             e.getMessage();
         }
     } //~ processSinglePage
-
-    void printItemList(){
-        for(Object it: itemList){
-            System.out.println(((Item)it).toString());
-        }
-    }
-
+         
 
     public void runParser() {
 
@@ -244,7 +226,6 @@ public class BTParserST {
             while(rs.next()) {
                 tempURL = rs.getString(1);
                 System.out.println("Parsing: " + tempURL);
-                page = downloadPage(tempURL);
 
                 if(page.length() > 0) {
                     processSinglePage();
@@ -258,9 +239,6 @@ public class BTParserST {
             e.getMessage();
         }
     }
-
-
-
 
 
     public static void main(String[] args) {
