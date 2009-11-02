@@ -249,7 +249,7 @@ public class UrlQ extends AbstractDatabase{
             try{
                 System.out.println("URL? :" + s);
                 tmpURL = new URL(s);
-                updateDB("INSERT INTO urlqueue VALUES ('" + tmpURL.toExternalForm() + "', 0);");
+                updateDB("INSERT INTO urlqueue VALUES ('" + tmpURL.toExternalForm() + "', 0, false);");
                 return true;
             } catch (MalformedURLException e){
                 System.out.println("-----URLQ Insert Error-----");

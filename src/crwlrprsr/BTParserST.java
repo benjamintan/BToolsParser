@@ -17,7 +17,7 @@ import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.util.*;
 
 
-public class BTParserST {
+public class BTParserST implements Runnable{
 
     static boolean DEBUG = true;
 
@@ -211,33 +211,48 @@ public class BTParserST {
     } //~ processSinglePage
          
 
-    public void runParser() {
+    public synchronized void runParser() {
 
         String tempURL;
-        String sql = "SELECT * FROM urlqueue u WHERE crawled != '2' && url LIKE '%CategoryID%' && url LIKE '%ProductID%'";
+        // Change this to != 2
+        String sql = "SELECT * FROM urlqueue u WHERE processed = false && url LIKE '%CategoryID%' && url LIKE '%ProductID%'";
 
         ResultSet rs;
 
 
         try {
+            
 
             rs = uQ.queryDB(sql);
 
             while(rs.next()) {
                 tempURL = rs.getString(1);
                 System.out.println("Parsing: " + tempURL);
-
+                page = downloadPage(tempURL);
                 if(page.length() > 0) {
+                    
+                    String sql2 = "UPDATE urlqueue SET processed = true WHERE url = '" + tempURL + "'";
+                    uQ.updateDB(sql2);
                     processSinglePage();
                     // Set the page to crawled = 2
-                    String sql2 = "UPDATE urlqueue SET crawled = '2' where url = '" + tempURL + "'";
+                    String sql3 = "UPDATE urlqueue SET crawled = '2' WHERE url = '" + tempURL + "'";
                     System.out.println("Updating: " + sql);
-                    uQ.updateDB(sql2);
+                    uQ.updateDB(sql3);
+                    
                 }
             }
         } catch (SQLException e) {
             e.getMessage();
+        } catch (Exception ex) {
+            
         }
+        uQ.closeDB();
+    }
+
+
+    public void run(){
+        BTParserST btp = new BTParserST();
+        btp.runParser();
     }
 
 
