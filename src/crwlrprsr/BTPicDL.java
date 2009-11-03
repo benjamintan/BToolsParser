@@ -42,12 +42,14 @@ public class BTPicDL {
 
                 // Save the file to local!
                 BufferedImage img = null;
-
-                try{
-                                     
                     System.out.println("Saving image ...:" + aStr);
+
+             
+                                     
+                    //System.out.println("Saving image ...:" + aStr);
                     // Saves the image
                     aStr = aStr.replace("%20", " ");
+
                     img = ImageIO.read(new URL(aStr));
 
                     // Process URL: Only want the filename
@@ -60,10 +62,7 @@ public class BTPicDL {
                     save(img, newStr);
                     
 
-                } catch (IOException e){
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                }
+             
             }
 
         }
