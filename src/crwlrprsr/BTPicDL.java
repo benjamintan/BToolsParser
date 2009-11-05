@@ -31,7 +31,7 @@ public class BTPicDL {
     public void runPicDownloader(){
 
 
-        ResultSet rs = tdb.queryDB("SELECT DISTINCT(imgUrl) FROM  btools WHERE imgUrl LIKE 'http%'");
+        ResultSet rs = tdb.queryDB("SELECT imgUrl FROM  btools WHERE imgUrl LIKE 'http%'");
         String aStr;
 
         try {
@@ -48,9 +48,9 @@ public class BTPicDL {
                                      
                     //System.out.println("Saving image ...:" + aStr);
                     // Saves the image
-                    aStr = aStr.replace("%20", " ");
+                    //aStr = aStr.replace("%20", " ");
 
-                    img = ImageIO.read(new URL(aStr));
+                    //img = ImageIO.read(new URL(aStr));
 
                     // Process URL: Only want the filename
                     int slash = aStr.lastIndexOf("/");
@@ -59,7 +59,7 @@ public class BTPicDL {
                     String sql = "UPDATE btools SET imgUrl = '" + newStr + "' WHERE imgUrl = '"+ aStr + "'";
                     tdb.updateDB(sql);
 
-                    save(img, newStr);
+                    //save(img, newStr);
                     
 
              
